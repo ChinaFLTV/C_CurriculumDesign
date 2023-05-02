@@ -202,6 +202,7 @@ void sortBooks(){
     }
 
     // 将本地数据缓存中的每一行数据映射为一个Book实体并存入数组中
+    //fclose(fp);
     fp = fopen(PATH, "r");
     while((line = fgets(buffer, LINE_SIZE, fp))!=NULL){
 
@@ -222,12 +223,12 @@ void sortBooks(){
             flag = 0;
             for (n = m+1; n<MAX_STORAGE_COUNT-1; n++) {
         
-                if((bps[m]->id)>(bps[n]->id)){
+                if((bps[m-1]->id)>(bps[m]->id)){
 
                     flag = 1;
-                    temp = bps[m];
-                    bps[m] = bps[n];
-                    bps[n] = temp;
+                    temp = bps[m-1];
+                    bps[m-1] = bps[m];
+                    bps[m] = temp;
 
                 }
 
