@@ -182,14 +182,15 @@ void searchBook(){
 // 根据编号大小进行排序并将结果进行输出
 void sortBooks(){
 
-    int mode,m,n,flag;
+    int mode,m,n;
     FILE* fp;
     char buffer[LINE_SIZE];
     char* line;
     bookPointer temp;
     bookPointer bps[MAX_STORAGE_COUNT];
-    int count;
+    int count = 0;
     int index = 0;
+    int flag = 1;
     printf("即将对当前书籍进行按编号大小排序：\n");
     printf("1.升序  |  2.降序\n");
     scanf("%d",&mode);
@@ -204,6 +205,14 @@ void sortBooks(){
     // 将本地数据缓存中的每一行数据映射为一个Book实体并存入数组中
     //fclose(fp);
     fp = fopen(PATH, "r");
+
+    // 初始化bps
+	for (m = 0; m < MAX_STORAGE_COUNT; m++) {
+
+		bps[m] = NULL;
+
+	}
+
     while((line = fgets(buffer, LINE_SIZE, fp))!=NULL){
 
         bps[index] = (bookPointer)malloc(sizeof(book));
@@ -221,18 +230,22 @@ void sortBooks(){
         if(flag ==1){
 
             flag = 0;
-            for (n = m+1; n<MAX_STORAGE_COUNT-1; n++) {
-        
-                if((bps[m-1]->id)>(bps[m]->id)){
+			for (n = 0; n < MAX_STORAGE_COUNT - m - 1 - 1; n++) {
 
-                    flag = 1;
-                    temp = bps[m-1];
-                    bps[m-1] = bps[m];
-                    bps[m] = temp;
+				if ((bps[n] != NULL) && (bps[n + 1] != NULL)) {
 
-                }
+					if ((bps[n]->id) > (bps[n + 1]->id)) {
 
-            }
+						flag = 1;
+						temp = bps[n];
+						bps[n] = bps[n + 1];
+						bps[n + 1] = temp;
+
+					}
+
+				}
+
+			}
 
         }else if(flag == 0){
 
@@ -269,11 +282,45 @@ void sortBooks(){
 
 int main(void) {
 
+    char buffer[4];
     printf("===============图书资料管理系统==============\n");
-    //addBook();
-    //deleteBook();
-    //searchBook();
-    sortBooks();
+    printf("===============1.添加图书==============\n");
+    printf("===============2.删除图书==============\n");
+    printf("===============3.查询图书==============\n");
+    printf("===============4.排序图书==============\n");
+
+    while(1){
+
+        printf("请输入要进行的操作与之对应的前面的序号:\n");
+        switch (atoi(fgets(buffer,ID_SIZE,stdin))) {
+
+            case 1:
+
+                addBook();
+                break;
+
+            case 2:
+
+                deleteBook();
+                break;   
+
+            case 3:
+
+                searchBook();
+                break;
+
+            case 4:
+
+                sortBooks();
+                break;
+
+            default:
+
+                break;        
+
+        }
+
+    }
     return 0;
 
 }
